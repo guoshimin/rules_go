@@ -18,10 +18,14 @@ load(
 )
 
 def _importpath(l):
-  return [v.data.importpath for v in l]
+#  return [v.data.importpath for v in l]
+  return [archive.data.importpath + "=" + archive.data.label.package for archive in l]
 
 def _searchpath(l):
   return [v.data.searchpath for v in l]
+
+def _importmap(l):
+  return [archive.data.importpath + "=" + archive.data.label.package for archive in l]
 
 def emit_compile(go,
     sources = None,
@@ -53,7 +57,12 @@ def emit_compile(go,
   args = go.args(go)
   args.add(["-package_list", go.package_list])
   args.add(go_sources, before_each="-src")
+  for a in archives:
+    print(a.data.label)
+    for f in dir(a.data):
+      print("    " + f + ": " + str(getattr(a.data, f, default="<unknown>")))
   args.add(archives, before_each="-dep", map_fn=_importpath)
+  #args.add(archives, before_each="-importmap", map_fn=_importmap)
   args.add(archives, before_each="-I", map_fn=_searchpath)
   args.add(["-o", out_lib, "-trimpath", ".", "-I", "."])
   args.add(["--"])

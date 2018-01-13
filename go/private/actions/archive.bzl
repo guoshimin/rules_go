@@ -38,10 +38,18 @@ def emit_archive(go, source=None):
   if go.cover:
     source, cover_vars = go.cover(go, source)
   split = split_srcs(source.srcs)
+  print("")
+  print("source=" + str(source))
+  print("pkg=" + source.library.label.package)
   compilepath = source.library.importpath if source.library.importpath else source.library.name
-  lib_name = compilepath + ".a"
+  print("compilepath=" + str(compilepath))
+  # lib_name = compilepath + ".a"
+  lib_name = source.library.label.package + ".a"
+  print("lib_name=" + str(lib_name))
   out_lib = go.declare_file(go, path=lib_name)
+  print("out_lib=" + str(out_lib))
   searchpath = out_lib.path[:-len(lib_name)]
+  print("searchpath=" + str(searchpath))
 
   extra_objects = []
   for src in split.asm:

@@ -63,6 +63,9 @@ func run(args []string) error {
 	}
 
 	goargs := []string{"tool", "compile"}
+	for _, d := range deps {
+		goargs = append(goargs, "-importmap", d)
+	}
 	goargs = append(goargs, "-trimpath", abs(*trimpath))
 	for _, path := range search {
 		goargs = append(goargs, "-I", abs(path))
@@ -75,6 +78,7 @@ func run(args []string) error {
 	env := os.Environ()
 	env = append(env, goenv.Env()...)
 	cmd := exec.Command(goenv.Go, goargs...)
+	fmt.Printf("Run: %v\n", cmd)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = env
@@ -105,7 +109,8 @@ func checkDirectDeps(bctx build.Context, files []*goMetadata, deps []string, pac
 
 	depSet := make(map[string]bool)
 	for _, d := range deps {
-		depSet[d] = true
+		parts := strings.Split(d, "=")
+		depSet[parts[0]] = true
 	}
 
 	var errs depsError
