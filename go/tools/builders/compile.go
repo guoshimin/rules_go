@@ -78,7 +78,6 @@ func run(args []string) error {
 	env := os.Environ()
 	env = append(env, goenv.Env()...)
 	cmd := exec.Command(goenv.Go, goargs...)
-	fmt.Printf("Run: %v\n", cmd)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Env = env
