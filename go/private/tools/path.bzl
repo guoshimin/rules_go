@@ -67,12 +67,9 @@ def _go_path_impl(ctx):
   manifest_entries = []
   manifest_entry_map = {}
   for pkg in pkg_map.values():
-    for f in pkg.srcs + pkg.data:
+    for f in pkg.srcs:
       _add_manifest_entry(manifest_entries, manifest_entry_map, inputs,
                           f, pkg.dir + "/" + f.basename)
-  for f in ctx.files.data:
-    _add_manifest_entry(manifest_entries, manifest_entry_map, inputs,
-                        f, f.basename)
   manifest_file = ctx.actions.declare_file(ctx.label.name + "~manifest")
   manifest_entries_json = [e.to_json() for e in manifest_entries]
   manifest_content = "[\n  " + ",\n  ".join(manifest_entries_json) + "\n]"
