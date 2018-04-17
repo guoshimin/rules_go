@@ -67,7 +67,9 @@ def _go_path_impl(ctx):
   manifest_entries = []
   manifest_entry_map = {}
   for pkg in pkg_map.values():
+    print("processing pkg {}".format(pkg))
     for f in pkg.srcs:
+      print("processing source {}".format(f))
       _add_manifest_entry(manifest_entries, manifest_entry_map, inputs,
                           f, pkg.dir + "/" + f.basename)
   manifest_file = ctx.actions.declare_file(ctx.label.name + "~manifest")
